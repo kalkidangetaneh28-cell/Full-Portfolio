@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth System - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: #ffd700;
+        }
+
+        .hero {
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffd700, #ff8e53);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 300px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            color: #ffd700;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: #ffd700;
+            color: #182848;
+        }
+
+        .btn-primary:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border-color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #182848;
+            transform: translateY(-3px);
+        }
+
+        .features {
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #ffd700;
+        }
+
+        .feature-list {
+            text-align: left;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-top: 5px;
+        }
+
+        .feature-text h4 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-text p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            display: none;
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .user-info.active {
+            display: block;
+        }
+
+        .user-info h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .user-details p {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .logout-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ff6b81;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ffd700;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .card {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .logo i {
+                font-size: 2.5rem;
+            }
+            
+            .btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="logo">
+            <i class="fas fa-user-shield"></i>
+            <span>AuthSystem</span>
+        </a>
+        
+        <div class="hero">
+            <h1>Secure Authentication System</h1>
+            <p>A complete user authentication solution with separate login and registration pages, password security, and user management.</p>
+            
+            <div class="user-info" id="user-info">
+                <h3><i class="fas fa-user-circle"></i> Currently Logged In</h3>
+                <div class="user-details" id="user-details">
+                    <!-- User info will be populated by JavaScript -->
+                </div>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <div class="cards">
+            <div class="card" onclick="window.location.href='login.html'">
+                <div class="card-icon">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <h3>Login</h3>
+                <p>Access your existing account with secure authentication. Features password visibility toggle and remember me functionality.</p>
+                <a href="login.html" class="btn btn-primary">Go to Login</a>
+            </div>
+            
+            <div class="card" onclick="window.location.href='register.html'">
+                <div class="card-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3>Register</h3>
+                <p>Create a new account with real-time validation, password strength indicator, and terms agreement.</p>
+                <a href="register.html" class="btn btn-outline">Go to Register</a>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h2>System Features</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Secure Authentication</h4>
+                        <p>Passwords are validated and stored securely with strength indicators and confirmation checks.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>User Management</h4>
+                        <p>Create, authenticate, and manage user accounts with email validation and duplicate prevention.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Responsive Design</h4>
+                        <p>Works perfectly on all devices from desktop to mobile with adaptive layouts and touch-friendly controls.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Real-time Validation</h4>
+                        <p>Instant feedback on form inputs with clear error messages and success indicators.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-links">
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            <p>&copy; 2023 AuthSystem. All rights reserved. Demo authentication system.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        function checkLoginStatus() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userInfo = document.getElementById('user-info');
+            const userDetails = document.getElementById('user-details');
+            
+            if (currentUser) {
+                // User is logged in
+                userInfo.classList.add('active');
+                
+                // Format login time
+                const loginTime = new Date(currentUser.loginTime);
+                const formattedTime = loginTime.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                // Display user info
+                userDetails.innerHTML = `
+                    <p><strong>Name:</strong> ${currentUser.name}</p>
+                    <p><strong>Email:</strong> ${currentUser.email}</p>
+                    <p><strong>Logged in since:</strong> ${formattedTime}</p>
+                `;
+            } else {
+                // User is not logged in
+                userInfo.classList.remove('active');
+            }
+        }
+        
+        // Logout function
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            checkLoginStatus();
+            alert('You have been logged out successfully.');
+        });
+        
+        // Check login status on page load
+        window.addEventListener('DOMContentLoaded', checkLoginStatus);
+        
+        // Add click animation to cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.style.transform = 'translateY(-10px)';
+                }, 150);
+            });
+        });
+        
+        // Add some interactive effects
+        const colors = ['#ffd700', '#ff8e53', '#4b6cb7', '#182848'];
+        let colorIndex = 0;
+        
+        setInterval(() => {
+            document.querySelector('.logo i').style.color = colors[colorIndex];
+            colorIndex = (colorIndex + 1) % colors.length;
+        }, 2000);
+    </script>
+</body>
+</html>

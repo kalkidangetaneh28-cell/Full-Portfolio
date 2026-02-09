@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glowing Bulb Effect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a4b0be;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .bulb-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .bulb {
+            width: 200px;
+            height: 200px;
+            background: #f1f2f6;
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 30px;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        }
+
+        .bulb.on {
+            background: #fff;
+            box-shadow: 
+                0 0 50px #ffdd59,
+                0 0 100px #ffdd59,
+                0 0 150px #ffdd59,
+                0 0 200px #ffdd59;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .bulb::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 50px;
+            background: #f1f2f6;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .bulb.on::before {
+            background: #fff;
+        }
+
+        .bulb::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 50px;
+            background: #747d8c;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .bulb-base {
+            width: 150px;
+            height: 60px;
+            background: #747d8c;
+            margin-top: -10px;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bulb-base::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 15px;
+            background: #57606f;
+            border-radius: 5px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .control-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #ff9f1a 0%, #ffaf40 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 159, 26, 0.4);
+        }
+
+        .control-btn.off {
+            background: linear-gradient(135deg, #747d8c 0%, #57606f 100%);
+        }
+
+        .control-btn.off:hover {
+            box-shadow: 0 15px 30px rgba(116, 125, 140, 0.4);
+        }
+
+        .brightness-control {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .brightness-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #a4b0be;
+        }
+
+        .brightness-slider {
+            width: 100%;
+            height: 12px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .brightness-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #ffdd59;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 221, 89, 0.8);
+        }
+
+        .brightness-slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #ffdd59;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 221, 89, 0.8);
+            border: none;
+        }
+
+        .status {
+            margin-top: 30px;
+            font-size: 1.3rem;
+            padding: 15px 30px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            display: inline-block;
+        }
+
+        .status.on {
+            color: #ffdd59;
+            text-shadow: 0 0 10px rgba(255, 221, 89, 0.5);
+        }
+
+        .status.off {
+            color: #a4b0be;
+        }
+
+        .color-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .color-btn.active {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .color-btn.warm {
+            background: #ffdd59;
+        }
+
+        .color-btn.cool {
+            background: #00d4ff;
+        }
+
+        .color-btn.white {
+            background: #ffffff;
+        }
+
+        .color-btn.purple {
+            background: #9b59b6;
+        }
+
+        .color-btn.red {
+            background: #e74c3c;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 40px;
+            text-align: left;
+            max-width: 600px;
+        }
+
+        .instructions h3 {
+            color: #f6d365;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .instructions ul {
+            color: #a4b0be;
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 
+                    0 0 50px var(--bulb-color, #ffdd59),
+                    0 0 100px var(--bulb-color, #ffdd59),
+                    0 0 150px var(--bulb-color, #ffdd59),
+                    0 0 200px var(--bulb-color, #ffdd59);
+            }
+            50% {
+                box-shadow: 
+                    0 0 60px var(--bulb-color, #ffdd59),
+                    0 0 120px var(--bulb-color, #ffdd59),
+                    0 0 180px var(--bulb-color, #ffdd59),
+                    0 0 240px var(--bulb-color, #ffdd59);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .bulb {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .control-btn {
+                min-width: 140px;
+                padding: 12px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .bulb {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Glowing Bulb Effect</h1>
+        <p class="subtitle">Interactive light bulb with adjustable brightness, color options, and realistic glow effects</p>
+        
+        <div class="bulb-area">
+            <div class="bulb" id="bulb"></div>
+            <div class="bulb-base"></div>
+            
+            <div class="status off" id="bulbStatus">
+                <i class="fas fa-lightbulb"></i> Bulb is OFF
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="turnOnBtn">
+                    <i class="fas fa-power-off"></i> Turn On
+                </button>
+                <button class="control-btn off" id="turnOffBtn">
+                    <i class="fas fa-power-off"></i> Turn Off
+                </button>
+                <button class="control-btn" id="toggleBtn">
+                    <i class="fas fa-sync-alt"></i> Toggle
+                </button>
+            </div>
+            
+            <div class="brightness-control">
+                <div class="brightness-label">
+                    <span>Brightness</span>
+                    <span id="brightnessValue">50%</span>
+                </div>
+                <input type="range" min="0" max="100" value="50" class="brightness-slider" id="brightnessSlider">
+            </div>
+            
+            <div class="color-controls">
+                <div class="color-btn warm active" data-color="#ffdd59"></div>
+                <div class="color-btn cool" data-color="#00d4ff"></div>
+                <div class="color-btn white" data-color="#ffffff"></div>
+                <div class="color-btn purple" data-color="#9b59b6"></div>
+                <div class="color-btn red" data-color="#e74c3c"></div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to Use:</h3>
+            <ul>
+                <li>Click "Turn On" to activate the bulb with glowing effect</li>
+                <li>Click "Turn Off" to deactivate the bulb</li>
+                <li>Use "Toggle" to switch between on/off states</li>
+                <li>Adjust brightness with the slider</li>
+                <li>Change bulb color by clicking on color buttons</li>
+                <li>The bulb will automatically pulse when turned on</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const bulb = document.getElementById('bulb');
+        const turnOnBtn = document.getElementById('turnOnBtn');
+        const turnOffBtn = document.getElementById('turnOffBtn');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const brightnessSlider = document.getElementById('brightnessSlider');
+        const brightnessValue = document.getElementById('brightnessValue');
+        const bulbStatus = document.getElementById('bulbStatus');
+        const colorButtons = document.querySelectorAll('.color-btn');
+        
+        // Current bulb state
+        let isOn = false;
+        let brightness = 50;
+        let currentColor = '#ffdd59';
+        
+        // Initialize bulb with CSS custom property for color
+        bulb.style.setProperty('--bulb-color', currentColor);
+        
+        // Turn on bulb
+        function turnOn() {
+            isOn = true;
+            bulb.classList.add('on');
+            updateStatus();
+            updateBrightnessEffect();
+        }
+        
+        // Turn off bulb
+        function turnOff() {
+            isOn = false;
+            bulb.classList.remove('on');
+            updateStatus();
+        }
+        
+        // Toggle bulb state
+        function toggleBulb() {
+            if (isOn) {
+                turnOff();
+            } else {
+                turnOn();
+            }
+        }
+        
+        // Update status display
+        function updateStatus() {
+            if (isOn) {
+                bulbStatus.innerHTML = '<i class="fas fa-lightbulb"></i> Bulb is ON';
+                bulbStatus.className = 'status on';
+            } else {
+                bulbStatus.innerHTML = '<i class="fas fa-lightbulb"></i> Bulb is OFF';
+                bulbStatus.className = 'status off';
+            }
+        }
+        
+        // Update brightness effect
+        function updateBrightnessEffect() {
+            if (!isOn) return;
+            
+            // Calculate shadow intensity based on brightness
+            const intensity = brightness / 100;
+            const glow1 = 30 + (intensity * 30);
+            const glow2 = 60 + (intensity * 60);
+            const glow3 = 90 + (intensity * 90);
+            const glow4 = 120 + (intensity * 120);
+            
+            bulb.style.boxShadow = `
+                0 0 ${glow1}px var(--bulb-color),
+                0 0 ${glow2}px var(--bulb-color),
+                0 0 ${glow3}px var(--bulb-color),
+                0 0 ${glow4}px var(--bulb-color)
+            `;
+        }
+        
+        // Event Listeners
+        turnOnBtn.addEventListener('click', turnOn);
+        turnOffBtn.addEventListener('click', turnOff);
+        toggleBtn.addEventListener('click', toggleBulb);
+        
+        // Brightness slider
+        brightnessSlider.addEventListener('input', function() {
+            brightness = parseInt(this.value);
+            brightnessValue.textContent = `${brightness}%`;
+            
+            if (isOn) {
+                updateBrightnessEffect();
+            }
+        });
+        
+        // Color selection
+        colorButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                colorButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Update bulb color
+                currentColor = this.getAttribute('data-color');
+                bulb.style.setProperty('--bulb-color', currentColor);
+                
+                // Update brightness effect if bulb is on
+                if (isOn) {
+                    updateBrightnessEffect();
+                }
+            });
+        });
+        
+        // Auto-toggle demonstration (optional, can be removed)
+        setTimeout(() => {
+            if (!isOn) {
+                turnOn();
+                setTimeout(() => {
+                    brightnessSlider.value = 80;
+                    brightness = 80;
+                    brightnessValue.textContent = '80%';
+                    updateBrightnessEffect();
+                }, 1000);
+            }
+        }, 1000);
+        
+        // Change color automatically every 5 seconds when on (optional)
+        setInterval(() => {
+            if (isOn) {
+                const colors = ['#ffdd59', '#00d4ff', '#ffffff', '#9b59b6', '#e74c3c'];
+                const currentIndex = colors.indexOf(currentColor);
+                const nextIndex = (currentIndex + 1) % colors.length;
+                
+                // Update active color button
+                colorButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.getAttribute('data-color') === colors[nextIndex]) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Update bulb color
+                currentColor = colors[nextIndex];
+                bulb.style.setProperty('--bulb-color', currentColor);
+                updateBrightnessEffect();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Scroll to Top Button</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #ecf0f1;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 60px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .content {
+            padding: 80px 0;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section p {
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .section img {
+            width: 100%;
+            border-radius: 10px;
+            margin: 20px 0;
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        }
+
+        /* Scroll to Top Button Styles */
+        #scrollToTopBtn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(30px) scale(0.8);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scrollToTopBtn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        #scrollToTopBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.6);
+        }
+
+        #scrollToTopBtn:active {
+            transform: scale(0.95);
+        }
+
+        #scrollToTopBtn::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            z-index: -1;
+            opacity: 0.5;
+            animation: pulse 2s infinite;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b 0%, #ff8e8e 100%);
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        .demo-area {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .demo-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+
+        .demo-instructions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .instruction-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .instruction-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .instruction-card i {
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .instruction-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #ecf0f1;
+        }
+
+        .instruction-card p {
+            color: #bdc3c7;
+            font-size: 0.95rem;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .floating-arrow {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            color: #bdc3c7;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section h2 {
+                font-size: 1.8rem;
+            }
+            
+            #scrollToTopBtn {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+                bottom: 30px;
+                right: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding: 30px;
+            }
+            
+            .section h2 {
+                font-size: 1.6rem;
+            }
+            
+            #scrollToTopBtn {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .demo-area {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="floating-arrow">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <div class="container">
+        <header>
+            <h1>Smooth Scroll to Top Button</h1>
+            <p class="subtitle">A beautifully animated button that appears when you scroll down and smoothly takes you back to the top of the page with elegant easing animations.</p>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-scroll"></i> How It Works</h2>
+                <p>The scroll-to-top button appears when you scroll down the page. It features smooth animations, a progress indicator, and multiple visual effects.</p>
+                <p>Scroll down to see the button appear, then click it to smoothly return to the top.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-feather-alt"></i> Smooth Animations</h2>
+                <p>The button uses CSS transitions and custom easing for a natural feel. When appearing, it scales up with a bounce effect.</p>
+                <p>Hover over the button to see it expand slightly, and click to experience the smooth scroll animation.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-tachometer-alt"></i> Scroll Progress</h2>
+                <p>The red progress bar at the top of the page shows how far you've scrolled. It updates in real-time as you scroll.</p>
+                <p>This visual indicator helps you understand your position on the page at a glance.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-mobile-alt"></i> Responsive Design</h2>
+                <p>The button is fully responsive and adjusts its size and position for different screen sizes.</p>
+                <p>On mobile devices, the button is slightly smaller and positioned closer to the screen edge for easier reach.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-code"></i> Implementation</h2>
+                <p>This button is implemented with pure HTML, CSS, and JavaScript. No external libraries are required.</p>
+                <p>The JavaScript calculates scroll position and applies smooth scrolling with requestAnimationFrame for optimal performance.</p>
+            </div>
+            
+            <!-- Demo Area -->
+            <div class="demo-area">
+                <h2 class="demo-title">Try It Yourself</h2>
+                <p>Scroll down this page to see the button appear in the bottom-right corner. The button will become visible after scrolling 300 pixels down.</p>
+                
+                <div class="demo-instructions">
+                    <div class="instruction-card">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <h3>Scroll Down</h3>
+                        <p>Scroll at least 300 pixels down to trigger the button appearance</p>
+                    </div>
+                    
+                    <div class="instruction-card">
+                        <i class="fas fa-eye"></i>
+                        <h3>Watch Animation</h3>
+                        <p>See the button fade in and scale up with a smooth animation</p>
+                    </div>
+                    
+                    <div class="instruction-card">
+                        <i class="fas fa-hand-pointer"></i>
+                        <h3>Click to Return</h3>
+                        <p>Click the button to smoothly scroll back to the top of the page</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dummy content to enable scrolling -->
+            <div style="height: 1500px; margin-top: 40px; opacity: 0.05;">
+                <!-- This empty div creates space for scrolling -->
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <p><i class="fas fa-code"></i> Pure HTML, CSS & JavaScript Implementation</p>
+                <p><i class="fas fa-paint-brush"></i> Beautiful Animations & Visual Effects</p>
+                <p><i class="fas fa-mobile"></i> Fully Responsive Design</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        const scrollProgress = document.getElementById('scrollProgress');
+        
+        // Show/hide button based on scroll position
+        function toggleScrollButton() {
+            const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            
+            // Show button after scrolling 300px
+            if (scrollPosition > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+            
+            // Update progress bar
+            const progress = (scrollPosition / (documentHeight - windowHeight)) * 100;
+            scrollProgress.style.width = `${progress}%`;
+        }
+        
+        // Smooth scroll to top function
+        function scrollToTop() {
+            // Get current scroll position
+            const currentPosition = window.scrollY || document.documentElement.scrollTop;
+            
+            // If already at top, do nothing
+            if (currentPosition <= 0) return;
+            
+            // Add click effect
+            scrollToTopBtn.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                scrollToTopBtn.style.transform = '';
+            }, 150);
+            
+            // Smooth scroll using requestAnimationFrame for better performance
+            const duration = 1000; // ms
+            const startTime = performance.now();
+            const startPosition = currentPosition;
+            
+            function scrollStep(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                
+                // Easing function (easeOutCubic)
+                const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+                const easedProgress = easeOutCubic(progress);
+                
+                // Calculate new position
+                const newPosition = startPosition * (1 - easedProgress);
+                window.scrollTo(0, newPosition);
+                
+                // Continue animation if not finished
+                if (progress < 1) {
+                    requestAnimationFrame(scrollStep);
+                }
+            }
+            
+            // Start animation
+            requestAnimationFrame(scrollStep);
+        }
+        
+        // Alternative simpler method using scrollTo with behavior smooth
+        function scrollToTopSimple() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Event Listeners
+        window.addEventListener('scroll', toggleScrollButton);
+        scrollToTopBtn.addEventListener('click', scrollToTop);
+        
+        // Initialize on page load
+        toggleScrollButton();
+        
+        // Add keyboard support (Space key when button is focused)
+        scrollToTopBtn.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                scrollToTop();
+            }
+        });
+        
+        // Add touch support for mobile devices
+        scrollToTopBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.9)';
+        });
+        
+        scrollToTopBtn.addEventListener('touchend', function() {
+            this.style.transform = '';
+        });
+        
+        // Auto-scroll demo after 3 seconds (optional)
+        setTimeout(() => {
+            if (window.scrollY === 0) {
+                window.scrollTo({
+                    top: 500,
+                    behavior: 'smooth'
+                });
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

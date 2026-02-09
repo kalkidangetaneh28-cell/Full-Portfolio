@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Login Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 20px 50px;
+        }
+
+        .logo {
+            width: 150px;
+            fill: #e50914;
+        }
+
+        .login-container {
+            background-color: rgba(0, 0, 0, 0.75);
+            max-width: 450px;
+            margin: 0 auto 100px;
+            padding: 60px 68px 40px;
+            border-radius: 4px;
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 16px 20px;
+            background-color: #333;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .login-input:focus {
+            outline: none;
+            background-color: #454545;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: #f40612;
+        }
+
+        .login-help {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #b3b3b3;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .need-help {
+            text-decoration: none;
+            color: #b3b3b3;
+        }
+
+        .need-help:hover {
+            text-decoration: underline;
+        }
+
+        .login-footer {
+            margin-top: 60px;
+            color: #737373;
+        }
+
+        .signup-text {
+            margin-top: 16px;
+            font-size: 16px;
+        }
+
+        .signup-link {
+            color: white;
+            text-decoration: none;
+        }
+
+        .signup-link:hover {
+            text-decoration: underline;
+        }
+
+        .recaptcha {
+            font-size: 13px;
+            margin-top: 13px;
+            line-height: 1.4;
+        }
+
+        .recaptcha-link {
+            color: #0071eb;
+            text-decoration: none;
+        }
+
+        .recaptcha-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #e87c03;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 20px;
+                max-width: 100%;
+                margin: 0 20px 30px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .logo {
+                width: 100px;
+            }
+        }
+
+        .footer {
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px 0;
+            margin-top: auto;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <svg class="logo" viewBox="0 0 111 30" xmlns="http://www.w3.org/2000/svg">
+            <path d="M105.062 14.28L111 30c-1.75-.25-3.499-.563-5.28-.845l-3.345-8.686-3.437 7.969c-1.687-.282-3.344-.376-5.031-.595l6.031-13.75L94.468 0h5.063l3.062 7.874L105.875 0h5.124l-5.937 14.28zM90.47 0h-4.594v27.25c1.5.094 3.062.156 4.594.343V0zm-8.563 26.937c-4.187-.281-8.375-.53-12.656-.625V0h4.687v21.875c2.688.062 5.375.28 7.969.405v4.657zM64.25 10.657v4.687h-6.406V26H53.22V0h13.125v4.687h-8.5v5.97h6.406zm-18.906-5.97V26.25c-1.563 0-3.156 0-4.688.062V4.687h-4.844V0h14.406v4.687h-4.874zM30.75 15.593c-2.062 0-4.5 0-6.25.095v6.968c2.75-.188 5.5-.406 8.281-.5v4.5l-12.968 1.032V0H32.78v4.687H24.5v5.967c2.281 0 4.562-.063 6.25-.063v5.002zM4.78 0v27.25c-1.5.094-3 .156-4.5.25V0h4.5z"></path>
+        </svg>
+    </header>
+
+    <main>
+        <div class="login-container">
+            <h1 class="login-title">Sign In</h1>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="email" class="login-input" id="email" placeholder="Email or phone number" required>
+                    <div class="error-message" id="emailError">Please enter a valid email or phone number.</div>
+                </div>
+                <div class="input-group">
+                    <input type="password" class="login-input" id="password" placeholder="Password" required>
+                    <div class="error-message" id="passwordError">Your password must contain between 4 and 60 characters.</div>
+                </div>
+                <button type="submit" class="login-btn">Sign In</button>
+                
+                <div class="login-help">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        Remember me
+                    </label>
+                    <a href="#" class="need-help">Need help?</a>
+                </div>
+            </form>
+            
+            <div class="login-footer">
+                <p class="signup-text">New to Netflix? <a href="#" class="signup-link">Sign up now</a>.</p>
+                <p class="recaptcha">
+                    This page is protected by Google reCAPTCHA to ensure you're not a bot. 
+                    <a href="#" class="recaptcha-link">Learn more</a>.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>This is a Netflix login page clone for educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            
+            let isValid = true;
+            
+            // Reset error messages
+            emailError.style.display = 'none';
+            passwordError.style.display = 'none';
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            
+            if (!emailRegex.test(email) && !phoneRegex.test(email.replace(/[\s\-\(\)]/g, ''))) {
+                emailError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Password validation
+            if (password.length < 4 || password.length > 60) {
+                passwordError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Simulate login process
+                const loginBtn = document.querySelector('.login-btn');
+                const originalText = loginBtn.textContent;
+                loginBtn.textContent = 'Signing In...';
+                loginBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    alert('Login successful! (This is a demo)');
+                    loginBtn.textContent = originalText;
+                    loginBtn.disabled = false;
+                    
+                    // In a real app, you would redirect to the main page
+                    // window.location.href = '/home';
+                }, 1500);
+            }
+        });
+        
+        // Focus management
+        document.getElementById('email').addEventListener('focus', function() {
+            document.getElementById('emailError').style.display = 'none';
+        });
+        
+        document.getElementById('password').addEventListener('focus', function() {
+            document.getElementById('passwordError').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
